@@ -21,4 +21,8 @@ SOURCES += main.cpp \
 HEADERS += \
     Engine.h
 
+OTHER_FILES += \
+    README.txt
+
+
 
