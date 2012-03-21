@@ -11,8 +11,8 @@ public:
 
 signals:
 
-public slots:
-
+private slots:
+    void onData(void);
 };
 
 #endif // ENGINE_H
