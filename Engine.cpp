@@ -35,5 +35,5 @@ void Engine::onData() {
                 break;
         }
     }
-    qDebug() << "Recieved data:" << str;
+    qDebug() << "Received: " << str << "\nSent from Engine Process";
 }
