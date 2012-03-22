@@ -8,7 +8,7 @@ QT       += core
 
 QT       -= gui
 
-TARGET = SimEngine
+TARGET = SimMotor
 CONFIG   += console
 CONFIG   -= app_bundle
 
