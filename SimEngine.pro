@@ -16,13 +16,17 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    Engine.cpp
+    Motor.cpp
 
 HEADERS += \
-    Engine.h
+    Motor.h
 
 OTHER_FILES += \
     README.txt
+
+
+
+
 
 
 

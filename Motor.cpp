@@ -1,23 +1,23 @@
 /***********************************************************************
   Group 3 ECE4574 Spring 2012
   Project 3 - Multicopter Simulator
-    SimEngine - A simulatable engine module (master branch)
+    SimMotor - A simulatable Motor module (master branch)
 
   Revisions:
     03/21/2012 - Initial version (master branch)
 ***********************************************************************/
 
-#include "Engine.h"
+#include "Motor.h"
 #include <QSocketNotifier>
 #include <QDebug>
 
-Engine::Engine(QObject *parent) : QObject(parent) {
+Motor::Motor(QObject *parent) : QObject(parent) {
     QSocketNotifier *inNotifier = new QSocketNotifier(STDIN_FILENO, QSocketNotifier::Read, this);
     QObject::connect(inNotifier, SIGNAL(activated(int)), this, SLOT(onData()));
     inNotifier->setEnabled(true);
 }
 
-void Engine::onData() {
+void Motor::onData() {
     QTextStream stream(stdin, QIODevice::ReadOnly);
     QString str;
     while(1) {
@@ -35,5 +35,5 @@ void Engine::onData() {
                 break;
         }
     }
-    qDebug() << "Received: " << str << "\nSent from Engine Process";
+    qDebug() << "Received: " << str << "\nSent from Motor Process";
 }

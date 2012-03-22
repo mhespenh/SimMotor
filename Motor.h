@@ -1,22 +1,22 @@
 /***********************************************************************
   Group 3 ECE4574 Spring 2012
   Project 3 - Multicopter Simulator
-    SimEngine - A simulatable engine module (master branch)
+    SimMotor - A simulatable Motor module (master branch)
 
   Revisions:
     03/21/2012 - Initial version (master branch)
 ***********************************************************************/
 
-#ifndef ENGINE_H
-#define ENGINE_H
+#ifndef MOTOR_H
+#define MOTOR_H
 
 #include <QObject>
 
-class Engine : public QObject
+class Motor : public QObject
 {
     Q_OBJECT
 public:
-    explicit Engine(QObject *parent = 0);
+    explicit Motor(QObject *parent = 0);
 
 signals:
 
@@ -24,4 +24,4 @@ private slots:
     void onData(void);
 };
 
-#endif // ENGINE_H
+#endif // MOTOR_H
