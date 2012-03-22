@@ -13,6 +13,6 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    Engine theEngine;
+    Engine theEngine; //instantiate an engine
     return a.exec();
 }
