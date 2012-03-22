@@ -18,22 +18,9 @@ Motor::Motor(QObject *parent) : QObject(parent) {
 }
 
 void Motor::onData() {
+    //Connect a QTextStream to the stdin as readonly
     QTextStream stream(stdin, QIODevice::ReadOnly);
     QString str;
-    while(1) {
-        fd_set stdinfd;
-        FD_ZERO( &stdinfd );
-        FD_SET( STDIN_FILENO, &stdinfd );
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = 0;
-        int ready = select( 1, &stdinfd, NULL, NULL, &tv );
-        if( ready > 0 ) {
-                str += stream.readLine();
-        }
-        else {
-                break;
-        }
-    }
+    str += stream.readLine(); //read from the stdin
     qDebug() << "Received: " << str << "\nSent from Motor Process";
 }
