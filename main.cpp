@@ -13,6 +13,6 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    Motor theMotor; //instantiate an Motor object
+    Motor theMotor; //instantiate a Motor object
     return a.exec();
 }
