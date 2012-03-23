@@ -5,13 +5,14 @@
 
   Revisions:
     03/21/2012 - Initial version (master branch)
-    03/23/2012 - Implemented dbus communication
+    03/23/2012 - Implemented dbus communication correctly
 ***********************************************************************/
 
 #ifndef MOTOR_H
 #define MOTOR_H
 
 #include <QObject>
+#include <QtDBus/QtDBus>
 
 class Motor : public QObject
 {
@@ -20,12 +21,14 @@ public:
     explicit Motor(QObject *parent = 0);
 
 public slots:
-    Q_SCRIPTABLE QString recvMessage(QString, int);
+    Q_SCRIPTABLE void recvMessage(QString, int);
 
 signals:
 
 private slots:
     void onData(void);
+private:
+    QDBusConnection bus;
 };
 
 #endif // MOTOR_H
