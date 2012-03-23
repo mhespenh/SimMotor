@@ -24,3 +24,8 @@ void Motor::onData() {
     str += stream.readLine(); //read from the stdin
     qDebug() << "Received: " << str << "\nSent from Motor Process";
 }
+
+QString Motor::recvMessage(QString msg, int type) {
+    qDebug() << "Received " << msg << " of type " << type;
+    return "Received okay";
+}

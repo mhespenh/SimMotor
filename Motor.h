@@ -18,6 +18,9 @@ class Motor : public QObject
 public:
     explicit Motor(QObject *parent = 0);
 
+public slots:
+    Q_SCRIPTABLE QString recvMessage(QString, int);
+
 signals:
 
 private slots:
