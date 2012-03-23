@@ -5,11 +5,11 @@
 #-------------------------------------------------
 
 QT       += core
-
 QT       -= gui
 
 TARGET = SimMotor
 CONFIG   += console
+CONFIG   += qdbus
 CONFIG   -= app_bundle
 
 TEMPLATE = app

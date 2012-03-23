@@ -5,6 +5,7 @@
 
   Revisions:
     03/21/2012 - Initial version (master branch)
+    03/23/2012 - Implemented dbus communication
 ***********************************************************************/
 
 #include <QtCore/QCoreApplication>
