@@ -6,6 +6,7 @@
   Revisions:
     03/21/2012 - Initial version (master branch)
     03/23/2012 - Implemented dbus communication correctly
+    03/25/2012 - Implemented a rough example of QSharedMemory
 ***********************************************************************/
 
 #include "Motor.h"
@@ -18,7 +19,13 @@ Motor::Motor(QObject *parent) : QObject(parent), bus(QDBusConnection::sessionBus
     inNotifier->setEnabled(true);
 
     bus.connect("", "/", "edu.vt.ece.msg", "msg", this, SLOT(recvMessage(QString, int)));
+    QDBusMessage reply = QDBusMessage::createSignal("/", "edu.vt.ece.procStart", "procStart");
+    reply << "Started OKAY";
+    bus.send(reply);
     readSharedMem();
+}
+
+Motor::~Motor() {
 }
 
 void Motor::onData() {
@@ -35,6 +42,7 @@ void Motor::recvMessage(QString msg, int type) {
     QDBusMessage reply = QDBusMessage::createSignal("/", "edu.vt.ece.ack", "ack");
     reply << "Received OKAY";
     bus.send(reply);
+    QCoreApplication::quit();
 }
 
 bool Motor::readSharedMem() {
@@ -53,6 +61,6 @@ bool Motor::readSharedMem() {
      sharedMem.unlock();
 
      sharedMem.detach();
-     qDebug() << theData.t0 << theData.t1 << theData.t2 << theData.t3 << "\n";
+     qDebug() << "Shared Memory contains: " << theData.t0 << theData.t1 << theData.t2 << theData.t3 << "\n";
      return true;
 }
