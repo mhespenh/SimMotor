@@ -12,12 +12,13 @@
 #include <QSocketNotifier>
 #include <QDebug>
 
-Motor::Motor(QObject *parent) : QObject(parent), bus(QDBusConnection::sessionBus()) {
+Motor::Motor(QObject *parent) : QObject(parent), bus(QDBusConnection::sessionBus()), sharedMem("PRIVATE_SHARED") {
     QSocketNotifier *inNotifier = new QSocketNotifier(STDIN_FILENO, QSocketNotifier::Read, this);
     QObject::connect(inNotifier, SIGNAL(activated(int)), this, SLOT(onData()));
     inNotifier->setEnabled(true);
 
     bus.connect("", "/", "edu.vt.ece.msg", "msg", this, SLOT(recvMessage(QString, int)));
+    readSharedMem();
 }
 
 void Motor::onData() {
@@ -34,4 +35,24 @@ void Motor::recvMessage(QString msg, int type) {
     QDBusMessage reply = QDBusMessage::createSignal("/", "edu.vt.ece.ack", "ack");
     reply << "Received OKAY";
     bus.send(reply);
+}
+
+bool Motor::readSharedMem() {
+    if (!sharedMem.attach()) {
+         return false;
+    }
+     data theData;
+     data* ptr;
+
+     sharedMem.lock();
+     ptr = (data*)sharedMem.data();
+     theData.t0 = ptr->t0;
+     theData.t1 = ptr->t1;
+     theData.t2 = ptr->t2;
+     theData.t3 = ptr->t3;
+     sharedMem.unlock();
+
+     sharedMem.detach();
+     qDebug() << theData.t0 << theData.t1 << theData.t2 << theData.t3 << "\n";
+     return true;
 }

@@ -13,6 +13,11 @@
 
 #include <QObject>
 #include <QtDBus/QtDBus>
+#include <QSharedMemory>
+
+struct data {
+    int t0, t1, t2, t3;
+};
 
 class Motor : public QObject
 {
@@ -28,7 +33,9 @@ signals:
 private slots:
     void onData(void);
 private:
+    bool readSharedMem();
     QDBusConnection bus;
+    QSharedMemory sharedMem;
 };
 
 #endif // MOTOR_H
