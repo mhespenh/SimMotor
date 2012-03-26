@@ -42,7 +42,7 @@ void Motor::recvMessage(QString msg, int type) {
     QDBusMessage reply = QDBusMessage::createSignal("/", "edu.vt.ece.ack", "ack");
     reply << "Received OKAY";
     bus.send(reply);
-    QCoreApplication::quit();
+    QCoreApplication::exit(4);
 }
 
 bool Motor::readSharedMem() {
