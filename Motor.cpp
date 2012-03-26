@@ -61,6 +61,6 @@ bool Motor::readSharedMem() {
      sharedMem.unlock();
 
      sharedMem.detach();
-     qDebug() << "Shared Memory contains: " << theData.t0 << theData.t1 << theData.t2 << theData.t3 << "\n";
+     qDebug() << "Shared Memory contains: " << theData.t0 << theData.t1 << theData.t2 << theData.t3;
      return true;
 }
