@@ -14,6 +14,8 @@
 #include <QSocketNotifier>
 #include <QDebug>
 
+#define PI 3.14159265
+
 Motor::Motor(QObject *parent) : QObject(parent), bus(QDBusConnection::sessionBus()), sharedMem("PRIVATE_SHARED") {
     QSocketNotifier *inNotifier = new QSocketNotifier(STDIN_FILENO, QSocketNotifier::Read, this);
     QObject::connect(inNotifier, SIGNAL(activated(int)), this, SLOT(onData()));
@@ -30,11 +32,11 @@ Motor::Motor(QObject *parent) : QObject(parent), bus(QDBusConnection::sessionBus
     kd = 0.01;  //derivative gain
     dt = 0;     //simulation time
     
-    currentThrottle = 0;
+    throttle = 0;
     integral = 0;
     prevError = 0;
     angle = 5;
-    setPoint = 20;
+    setPoint = 25;
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(motorController()));
@@ -83,8 +85,8 @@ bool Motor::readSharedMem() {
 
 void Motor::motorController() {
     float error = setPoint-angle;
-    float derivative = (error - prevError)*kd;
-    qDebug() << "Time: " << dt << "sec Throttle" << currentThrottle << " Set point: "
+    float derivative;
+    qDebug() << "Time: " << dt << "sec Throttle" << throttle << " Set point: "
              << setPoint << " Angle:" << angle;
     dt += 0.01;
 
@@ -97,18 +99,17 @@ void Motor::motorController() {
             integral = 0;
         }
     }
+    derivative = (error - prevError)*kd;
+    throttle = kp*error + integral + derivative;
 
-    currentThrottle = kp*error + integral + derivative;
-
-    if( currentThrottle > 100 ) {
-        currentThrottle = 100;
+    if( throttle > 100 ) {
+        throttle = 100;
     }
-    if( currentThrottle < 0 ) {
-        currentThrottle = 0.001;
+    if( throttle < 0 ) {
+        throttle = 0.001;
     }
 
     prevError = error;
 
-    angle += (currentThrottle-25)*0.1;
-
+    angle += ((throttle-25)*cos(angle*(PI/180))) * 0.1;
 }

@@ -41,7 +41,7 @@ private:
     QDBusConnection bus;
     QSharedMemory sharedMem;
     float kp, ki, kd, dt, setPoint;
-    float currentThrottle, prevError, integral;
+    float throttle, prevError, integral;
     float angle;
 };
 
