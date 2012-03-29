@@ -30,7 +30,10 @@ public:
 
 public slots:
     Q_SCRIPTABLE void recvMessage(QString, int);
+
+private slots:
     void motorController(void);
+    void updatePhysics(void);
 
 signals:
 
@@ -40,9 +43,9 @@ private:
     bool readSharedMem();
     QDBusConnection bus;
     QSharedMemory sharedMem;
-    float kp, ki, kd, dt, setPoint;
+    float kp, ki, kd, dt, setPoint, simTime;
     float throttle, prevError, integral;
-    float angle;
+    float pitch, roll;
 };
 
 #endif // MOTOR_H

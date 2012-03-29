@@ -27,20 +27,26 @@ Motor::Motor(QObject *parent) : QObject(parent), bus(QDBusConnection::sessionBus
     bus.send(reply);
     readSharedMem();
 
-    kp = 4;     //proportional gain
-    ki = 0.3;   //integral gain
-    kd = 0.01;  //derivative gain
-    dt = 0;     //simulation time
+    kp = 5;     //proportional gain
+    ki = 3;   //integral gain
+    kd = 0.05;  //derivative gain
+    dt = 0.01;     //simulation time
     
     throttle = 0;
     integral = 0;
     prevError = 0;
-    angle = 5;
-    setPoint = 25;
+    simTime = 0;
+    pitch = 0;
+    roll = 0;
+    setPoint = 30;
+
+    QTimer *physicsTimer = new QTimer(this);
+    connect(physicsTimer, SIGNAL(timeout()), this, SLOT(updatePhysics()));
+    physicsTimer->start(dt*1000); //10ms timer
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(motorController()));
-    timer->start(10); //10ms timer
+    timer->start(dt*1000); //10ms timer
 }
 
 Motor::~Motor() {
@@ -84,14 +90,16 @@ bool Motor::readSharedMem() {
 }
 
 void Motor::motorController() {
-    float error = setPoint-angle;
+    if( pitch > setPoint-1) {
+        QCoreApplication::exit(0);
+    }
+    float error = setPoint-pitch;
     float derivative;
-    qDebug() << "Time: " << dt << "sec Throttle" << throttle << " Set point: "
-             << setPoint << " Angle:" << angle;
-    dt += 0.01;
-
-    if(abs(error) > 0.1) {
-        integral = integral + ((error+prevError)*ki);
+    qDebug() << "Time:" << simTime << "sec Throttle:" << throttle << "Set point:"
+             << setPoint << "Pitch:" << pitch;
+    simTime += dt;
+    if(abs(error) > 0.01) {
+        integral += (error+prevError)*dt;
         if( integral > 100) {
             integral = 100;
         }
@@ -99,8 +107,8 @@ void Motor::motorController() {
             integral = 0;
         }
     }
-    derivative = (error - prevError)*kd;
-    throttle = kp*error + integral + derivative;
+    derivative = (error - prevError) / dt;
+    throttle = error*kp + integral*ki + derivative*kd;
 
     if( throttle > 100 ) {
         throttle = 100;
@@ -110,6 +118,8 @@ void Motor::motorController() {
     }
 
     prevError = error;
+}
 
-    angle += ((throttle-25)*cos(angle*(PI/180))) * 0.1;
+void Motor::updatePhysics() {
+    pitch += ((throttle-25)*cos(pitch*(PI/180)))*cos(roll*(PI/180)) * 0.1;
 }
