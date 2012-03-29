@@ -7,6 +7,7 @@
     03/21/2012 - Initial version (master branch)
     03/23/2012 - Implemented dbus communication correctly
     03/25/2012 - Implemented a rough example of QSharedMemory
+    03/28/2012 - Implemented a basic PID controller
 ***********************************************************************/
 
 #include "Motor.h"
@@ -23,6 +24,21 @@ Motor::Motor(QObject *parent) : QObject(parent), bus(QDBusConnection::sessionBus
     reply << "Started OKAY";
     bus.send(reply);
     readSharedMem();
+
+    kp = 4;     //proportional gain
+    ki = 0.3;   //integral gain
+    kd = 0.01;  //derivative gain
+    dt = 0;     //simulation time
+    
+    currentThrottle = 0;
+    integral = 0;
+    prevError = 0;
+    angle = 5;
+    setPoint = 20;
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(motorController()));
+    timer->start(10); //10ms timer
 }
 
 Motor::~Motor() {
@@ -63,4 +79,36 @@ bool Motor::readSharedMem() {
      sharedMem.detach();
      qDebug() << "Shared Memory contains: " << theData.t0 << theData.t1 << theData.t2 << theData.t3;
      return true;
+}
+
+void Motor::motorController() {
+    float error = setPoint-angle;
+    float derivative = (error - prevError)*kd;
+    qDebug() << "Time: " << dt << "sec Throttle" << currentThrottle << " Set point: "
+             << setPoint << " Angle:" << angle;
+    dt += 0.01;
+
+    if(abs(error) > 0.1) {
+        integral = integral + ((error+prevError)*ki);
+        if( integral > 100) {
+            integral = 100;
+        }
+        if( integral < 0 ) {
+            integral = 0;
+        }
+    }
+
+    currentThrottle = kp*error + integral + derivative;
+
+    if( currentThrottle > 100 ) {
+        currentThrottle = 100;
+    }
+    if( currentThrottle < 0 ) {
+        currentThrottle = 0.001;
+    }
+
+    prevError = error;
+
+    angle += (currentThrottle-25)*0.1;
+
 }

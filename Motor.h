@@ -7,6 +7,7 @@
     03/21/2012 - Initial version (master branch)
     03/23/2012 - Implemented dbus communication correctly
     03/25/2012 - Implemented a rough example of QSharedMemory
+    03/28/2012 - Implemented a basic PID controller
 ***********************************************************************/
 
 #ifndef MOTOR_H
@@ -29,6 +30,7 @@ public:
 
 public slots:
     Q_SCRIPTABLE void recvMessage(QString, int);
+    void motorController(void);
 
 signals:
 
@@ -38,6 +40,9 @@ private:
     bool readSharedMem();
     QDBusConnection bus;
     QSharedMemory sharedMem;
+    float kp, ki, kd, dt, setPoint;
+    float currentThrottle, prevError, integral;
+    float angle;
 };
 
 #endif // MOTOR_H

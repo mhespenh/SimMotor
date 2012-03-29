@@ -10,3 +10,10 @@ Changelog:
         03/23/2012 - Successfully implemented DBus message passing -MAH
         03/25/2012 - Implemented a rough example of QSharedMemory -MAH
         03/26/2012 - Successfully implemented qProcesses! -MAH
+        03/28/2012 - Implmented a VERY basic angle-based PID motor controller -MAH
+
+Notes:
+        Basic PID info:  What it does now- you set the angle the craft is currently at (angle)
+        then you set the angle you want to get to (setPoint), then let it run.  It will vary
+        the motor throttle until it hits the correct angle, then keep it there.  Notice the throttle
+        will always stay at 25% when stable- this is to correct for gravity :)
