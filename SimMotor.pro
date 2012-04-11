@@ -9,7 +9,9 @@ CONFIG += qdbus
 CONFIG -= app_bundle
 TEMPLATE = app
 SOURCES += main.cpp \
-    Motor.cpp
-HEADERS += Motor.h
+    Motor.cpp \
+    aiobject.cpp
+HEADERS += Motor.h \
+    aiobject.h
 OTHER_FILES += README.txt \
     README
