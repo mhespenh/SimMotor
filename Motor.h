@@ -25,27 +25,29 @@ class Motor : public QObject
 {
     Q_OBJECT
 public:
-    explicit Motor(QObject *parent = 0);
+    explicit Motor(int motorNum, QObject *parent = 0);
     ~Motor();
 
 public slots:
     Q_SCRIPTABLE void recvMessage(QString, int);
+    Q_SCRIPTABLE void recvUpdate(double, double, double);
 
 private slots:
     void motorController(void);
-    void updatePhysics(void);
 
 signals:
 
 private slots:
     void onData(void);
+
 private:
     bool readSharedMem();
     QDBusConnection bus;
     QSharedMemory sharedMem;
-    float kp, ki, kd, dt, setPoint, simTime;
-    float throttle, prevError, integral;
-    float pitch, roll;
+    double kp, ki, kd, dt, setPoint, simTime;
+    double throttle, prevError, integral;
+    double pitch, roll, altitude;
+    int motorNumber;
 };
 
 #endif // MOTOR_H

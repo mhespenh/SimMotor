@@ -10,13 +10,15 @@
 ***********************************************************************/
 
 #include <QtCore/QCoreApplication>
+#include <stdio.h>
 #include <Motor.h>
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    Motor theMotor; //instantiate a Motor object
+    int motorNum = atoi(argv[1]);
+    Motor theMotor(motorNum); //instantiate a Motor object
 
     return a.exec();
 }
