@@ -17,6 +17,10 @@
 #include <QtDBus/QtDBus>
 #include <QSharedMemory>
 
+
+#define PI 3.1415926535897932384626433832795028841971693993751058209
+
+
 struct data {
     int t0, t1, t2, t3;
 };
@@ -44,7 +48,8 @@ private:
     bool readSharedMem();
     QDBusConnection bus;
     QSharedMemory sharedMem;
-    double kp, ki, kd, dt, setPoint, simTime;
+    double kp, ki, kd, dt, simTime;
+    double alt_kp, alt_kd,alt_ki;
     double throttle, pitch_prevError, pitch_integral;
     double roll_prevError, roll_integral;
     double alt_prevError, alt_integral;

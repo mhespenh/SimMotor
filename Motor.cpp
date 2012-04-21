@@ -14,7 +14,6 @@
 #include <QSocketNotifier>
 #include <QDebug>
 
-#define PI 3.1415926535897932384626433832795028841971693993751058209
 
 Motor::Motor(int motorNum, int numMotors, QObject *parent) : QObject(parent), bus(QDBusConnection::sessionBus()) {
     QSocketNotifier *inNotifier = new QSocketNotifier(STDIN_FILENO, QSocketNotifier::Read, this);
@@ -36,9 +35,14 @@ Motor::Motor(int motorNum, int numMotors, QObject *parent) : QObject(parent), bu
     //initiate PID variables
     //These are tuned by hand with trial and error
     // I wouldn't mess with them unless you REALLY know what you're doing :)
-    kp = 5;     //proportional gain (how fast we should get there)
+    kp = .5;     //proportional gain (how fast we should get there)
     ki = 0;     //integral gain (error over time)
-    kd = .05 ;   //derivative gain
+    kd = .005 ;   //derivative gain
+
+    alt_kp = 10;     //proportional gain (how fast we should get there)
+    alt_ki = 0;     //integral gain (error over time)
+    alt_kd = .01 ;   //derivative gain
+
     pitch_integral = 0;
     pitch_prevError = 0;
     roll_integral = 0;
@@ -51,7 +55,7 @@ Motor::Motor(int motorNum, int numMotors, QObject *parent) : QObject(parent), bu
     curPitch = 0;
     curRoll = 0;
     curAltitude = 0;
-    dt = .1;
+    dt = 0.01;
 
     targetPitch = 0;
     targetRoll = 0;
@@ -138,13 +142,13 @@ void Motor::motorController() {
     else
         throttle += (roll_error*kp + roll_integral*ki + roll_derivative*kd);
 
-    throttle += (alt_error*kp + alt_integral*ki + alt_derivative*kd);
+    throttle += (alt_error*alt_kp + alt_integral*alt_ki + alt_derivative*alt_kd);
 
     if( throttle > 100 ) {
         throttle = 100;
     }
     if( throttle < 0 ) {
-        throttle = 0.1;
+        throttle = 0;
     }
 
     qDebug() << "Time:" << simTime << "sec Throttle:" << throttle << "Target Pitch:"
