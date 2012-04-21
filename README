@@ -2,7 +2,11 @@ Usage:
         Compile both SimMotor and Multicopter_Simulator
         Make sure you change the PATH to the SimMotor binary in the constructor
             in MulticopterSimulator.cpp to match your directory structure!
-        Run Multicopter_Simulator from the command line and enjoy
+        Run Multicopter_Simulator from the command line.
+        Then run MulticopterGUI to view the simulation in progress.
+
+        You really shouldn't need to (read: shouldn't) make any changes
+            to this class.  Just compile and move on.
 
 Changelog:
         03/21/2012 - Initial Version -MAH
@@ -13,8 +17,7 @@ Changelog:
         03/28/2012 - Implmented a VERY basic angle-based PID motor controller -MAH
 
 Notes:
-        Basic PID info:  What it does now- you set the angle the craft is currently
-        at (angle) then you set the angle you want to get to (setPoint), then let it
+        Basic PID info:  What it does - you set the angle the craft is currently
+        at (angle) then you set the angle you want to get to (target), then let it
         run.  It will vary the motor throttle until it hits the correct angle, then
-        keep it there.  Notice the throttle will always stay at 25% when stable-
-        this is to correct for gravity :)
+        keep it there.

@@ -14,6 +14,7 @@
 #include <QSocketNotifier>
 #include <QDebug>
 
+//#define DEBUG
 
 Motor::Motor(int motorNum, int numMotors, QObject *parent) : QObject(parent), bus(QDBusConnection::sessionBus()) {
     QSocketNotifier *inNotifier = new QSocketNotifier(STDIN_FILENO, QSocketNotifier::Read, this);
@@ -151,10 +152,11 @@ void Motor::motorController() {
         throttle = 0;
     }
 
+#ifdef DEBUG
     qDebug() << "Time:" << simTime << "sec Throttle:" << throttle << "Target Pitch:"
              << targetPitch << "Pitch:" << curPitch << "Target Roll:"
              << targetRoll << "Roll:" << curRoll;
-
+#endif
     pitch_prevError = pitch_error;
     roll_prevError = roll_error;
 
