@@ -18,7 +18,8 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     int motorNum = atoi(argv[1]);
-    Motor theMotor(motorNum); //instantiate a Motor object
+    int numMotors = atoi(argv[2]);
+    Motor theMotor(motorNum, numMotors); //instantiate a Motor object
 
     return a.exec();
 }
